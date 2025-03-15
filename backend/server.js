@@ -16,12 +16,14 @@ app.use('/uploads', express.static('uploads'));
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI, {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    serverSelectionTimeoutMS: 60000, // Increase timeout
+    socketTimeoutMS: 45000, // Increase socket timeout
+    autoIndex: false, // Disable auto-creating indexes
 })
-.then(async () => {
-    console.log("Connected to MongoDB");
-   
-}).catch(err => console.error("MongoDB Connection Error:", err));
+.then(() => console.log('MongoDB connected successfully'))
+.catch(err => console.error('MongoDB Connection Error:', err));
+
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         cb(null, 'uploads/');  // Save files in the "uploads" folder
